@@ -10,11 +10,18 @@ namespace Intro
 {
     class Sprite
     {
-      //make sure the hitbox gets updated (use get)
-        Texture2D image;
-        Vector2 position;
+
+        public Texture2D image;
+        public Vector2 position;
         Color tint;
-        Rectangle hitbox;
+        public Rectangle hitbox
+        {
+            get
+            {
+                return new Rectangle((int)position.X, (int)position.Y, image.Width, image.Height);
+            }
+        }
+        
         public Sprite(Texture2D image, Vector2 position, Color tint)
         {
             this.image = image;
@@ -25,7 +32,7 @@ namespace Intro
         {
             spriteBatch.Draw(image,position,tint);
         }
-
+        
 
     }
 }

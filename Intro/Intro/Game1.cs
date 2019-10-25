@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Intro
 {
@@ -15,7 +16,10 @@ namespace Intro
         Texture2D Image;
         Vector2 Position;
         Color Tint;
-
+        Ball ball;
+        Paddle paddle;
+        Brick brick;
+        List<Brick> bricks;
         //make a sprite class
         //make class for each object (paddle,brick,ball etc etc)
         //make game.
@@ -53,7 +57,8 @@ namespace Intro
             Image = Content.Load<Texture2D>("shadowMorty");
             Position = new Vector2(100, 100);
             Tint = Color.White;
-           
+            ball = new Ball(Content.Load<Texture2D>("Ball"), new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 3), Color.White);
+            paddle = new Paddle(Content.Load<Texture2D>("Paddle"), new Vector2(ball.position.X, GraphicsDevice.Viewport.Height - 20), Color.White);
             // TODO: use this.Content to load your game content here
         }
 
@@ -72,30 +77,19 @@ namespace Intro
         /// </summary>
         /// <param name="gameTime">Provide
         /// s a snapshot of timing values.</param>
-        public void giveSpeed()
-        {
-            Position.X += speed.X;
-
-            Position.Y += speed.Y;
-
-        }
+        
+        
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            Position.X += speed.X;
 
-            Position.Y += speed.Y;
+
+
+
+            ball.move(GraphicsDevice.Viewport);
             //clientsize = graphicsDevice.viewPort. <----------------
-            if (Position.X < 0|| Position.X + Image.Width > GraphicsDevice.Viewport.Width)
-            {
-                speed.X *= -1;
-
-            }
-            if(Position.Y < 0 || Position.Y+ Image.Height > GraphicsDevice.Viewport.Height)
-            {
-                speed.Y *= -1;
-            }
+            
             base.Update(gameTime);
         }
 
@@ -107,9 +101,8 @@ namespace Intro
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-
-            spriteBatch.Draw(Image, Position, Tint);
-
+            paddle.Draw(spriteBatch);
+            ball.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }
