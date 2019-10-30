@@ -13,6 +13,7 @@ namespace Intro
 
         public Texture2D image;
         public Vector2 position;
+        public string Id;
         Color tint;
         public Rectangle hitbox
         {
@@ -27,6 +28,7 @@ namespace Intro
             this.image = image;
             this.position = position;
             this.tint = tint;
+            this.Id = Id;
         }
         public void Draw(SpriteBatch spriteBatch)
         {

@@ -10,6 +10,7 @@ namespace Intro
 {
     class Brick : Sprite
     {
+        public string name = "Brick";
         public Brick(Texture2D image, Vector2 position, Color tint) : base(image, position, tint)
         {
         }

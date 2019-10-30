@@ -20,6 +20,11 @@ namespace Intro
             speeds.Y = 1;
             defaultPosition = position;
         }
+        public void flipSpeed()
+        {
+            this.speeds.X *= -1;
+            this.speeds.Y *= -1;
+        }
         void giveSpeed()
         {
 

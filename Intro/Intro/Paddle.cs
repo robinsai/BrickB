@@ -12,27 +12,31 @@ namespace Intro
     //move function that takes in keys
     class Paddle : Sprite
     {
-         
+       
         public Paddle(Texture2D image, Vector2 position, Color tint) 
             : base(image, position, tint)
         {
         }
-
-        public void checkButtonPress(KeyboardState ks)
+        public int imageWidth()
+        {
+            return image.Width;
+        }
+        public void checkButtonPress(KeyboardState ks, Viewport screen)
         {
             
              ks = Keyboard.GetState();
             
-            if(ks.IsKeyDown(Keys.Left))
+            if(ks.IsKeyDown(Keys.Left)&& position.X > 0)
             {
-                position.X--;
+                position.X-=2;
             }
-            else if (ks.IsKeyDown(Keys.Right))
+            else if (ks.IsKeyDown(Keys.Right) && position.X + image.Width < screen.Width)
             {
-                position.X++;
+                position.X+=2;
             }
 
 
-                    }
+         }
+
     }
 }
