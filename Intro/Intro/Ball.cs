@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Intro
 {
-    class Ball : Sprite
+    public class Ball : Sprite
     {
         Vector2 speeds;
         bool hitBottom;
@@ -20,10 +20,24 @@ namespace Intro
             speeds.Y = 1;
             defaultPosition = position;
         }
-        public void flipSpeed()
+        public void flipSpeed(string option)
         {
-            this.speeds.X *= -1;
-            this.speeds.Y *= -1;
+            switch(option)
+            {
+                case "both":
+                this.speeds.X *= -1;
+                this.speeds.Y *= -1;
+                break;
+                    
+                case "X":
+                this.speeds.X *= -1;
+                break;
+
+                case "Y":
+                this.speeds.Y *= -1;
+                break;
+            }
+           
         }
         void giveSpeed()
         {
@@ -58,7 +72,12 @@ namespace Intro
             }
             bottomScreenReset();
         }
-      
+        public void speedModifier(int modifierValue)
+        {
+            speeds.X += modifierValue;
+            speeds.Y += modifierValue;
+           
+        }
         
     }
 }

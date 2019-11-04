@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 namespace Intro
 {
     //move function that takes in keys
-    class Paddle : Sprite
+   public class Paddle : Sprite
     {
-       
+
+        
         public Paddle(Texture2D image, Vector2 position, Color tint) 
             : base(image, position, tint)
         {
@@ -21,6 +22,7 @@ namespace Intro
         {
             return image.Width;
         }
+      
         public void checkButtonPress(KeyboardState ks, Viewport screen)
         {
             
@@ -37,6 +39,10 @@ namespace Intro
 
 
          }
+       public void widthModifier(int value)
+        {
+            image.Width
+        }
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace Intro
@@ -17,19 +18,85 @@ namespace Intro
         Vector2 Position;
         Color Tint;
         Ball ball;
+        List<Ball> balls;
         Paddle paddle;
         Brick brick;
         List<Brick> bricks;
+        Random ran;
+        int visibleCounter = 0;
         //make a sprite class
         //make class for each object (paddle,brick,ball etc etc)
         //make game.
-        
+     
+        public void powerUpRandomizer(List<Brick> brickss)
+        { 
+            ran = new Random();
+            int index = 0;
+            List<int> whichBrickHoldsPower = new List<int>();
+            
+            for(int i = 0; i < 12;i++)
+            {
+                index = ran.Next(bricks.Count);
+                while (whichBrickHoldsPower.Contains(index))
+                 {
+                    index = ran.Next(bricks.Count);
+                 }
+                whichBrickHoldsPower.Add(index);
+            }
+
+            for(int i=0;i< whichBrickHoldsPower.Count;i++)
+            {
+                bricks[whichBrickHoldsPower[i]].doIHavePowerUp = true;
+                bricks[whichBrickHoldsPower[i]].powerUp = (Brick.powerUps)ran.Next(3);
+            }
+        }
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-       
+        public void ballHittingPaddle(Ball ball, List<Brick> bricks,Paddle paddle)
+        {
+            if (ball.hitbox.Intersects(paddle.hitbox))
+            {
+                ball.flipSpeed("Y");
+            }
+            for (int i = 0; i < bricks.Count; i++)
+            {
+                for(int x =0; x < balls.Count;x++)
+                { 
+                    if (balls[x].hitbox.Intersects(bricks[i].hitbox))
+                    {
+
+                        if (bricks[i].hasPowerUp())
+                        {
+                            switch(bricks[i].powerUp)
+                            {
+                                case Brick.powerUps.FasterBall:
+                                    balls[x].speedModifier(1);
+                                    break;
+
+                                case Brick.powerUps.MoreBalls:
+                                    balls.Add(new Ball(Content.Load<Texture2D>("Ball"), new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 3), Color.White));
+                                    break;
+
+                                case Brick.powerUps.WiderPaddle:
+                                    paddle.
+                                    break;
+                            }
+                        }
+                        else if(balls[x].hitbox.Intersects(paddle.hitbox))
+                        {
+
+                        }
+                        ball.flipSpeed("Y");
+                        bricks[i].visible = false; 
+                    }
+               
+                }
+            }
+        }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -63,28 +130,30 @@ namespace Intro
             ball = new Ball(Content.Load<Texture2D>("Ball"), new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 3), Color.White);
             paddle = new Paddle(Content.Load<Texture2D>("Paddle"), new Vector2(ball.position.X, GraphicsDevice.Viewport.Height - 20), Color.White);
             int spaceInBetween = 0;
-            for(int i =0; i < 48;i++)
+            for(int i =0; i < 49;i++)
             {
-                if (i == 16 || i == 32)
+                if (i ==17 || i == 33)
                 {
                     spaceInBetween = 0;
                 }
-                if (i < 16)
+                if (i > 32 && i <= 48)
                 { 
                 bricks.Add(new Brick(Content.Load<Texture2D>("Bricks"), new Vector2(spaceInBetween,0 ), Color.White));
                     
                 }
               
-                else if (i > 16 && i < 32)
+                else if (i > 16 && i <= 32)
                 {
                     bricks.Add(new Brick(Content.Load<Texture2D>("Bricks2"), new Vector2(spaceInBetween, 30), Color.White));
                 }
-                else if (i >31 && i < 48)
+                else if (i < 16)
                 {
                     bricks.Add(new Brick(Content.Load<Texture2D>("Bricks3"), new Vector2(spaceInBetween, 60), Color.White));
                 }
                 spaceInBetween += 50;
             }
+           
+            powerUpRandomizer(bricks);
             // TODO: use this.Content to load your game content here
         }
 
@@ -111,15 +180,15 @@ namespace Intro
             KeyboardState ks = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (ball.hitbox.Intersects(paddle.hitbox))
-            {
-                ball.flipSpeed();
-            }
-          
+         
+           
             paddle.checkButtonPress(ks, GraphicsDevice.Viewport);
             ball.move(GraphicsDevice.Viewport);
             //clientsize = graphicsDevice.viewPort. <----------------
-            
+            if(visibleCounter == bricks.Count)
+            {
+                //gameOver
+            }
             base.Update(gameTime);
         }
 
@@ -131,14 +200,31 @@ namespace Intro
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            paddle.Draw(spriteBatch);
-            ball.Draw(spriteBatch);
             for(int i =0; i < bricks.Count;i++)
             {
-                bricks[i].Draw(spriteBatch);
+              
+                if(bricks[i].visible)
+                { 
+                    bricks[i].Draw(spriteBatch);
+                }
+                else
+                {
+                    visibleCounter++;
+                }
             }
+
+            paddle.Draw(spriteBatch);
+            for(int i =0;i< balls.Count;i++)
+            {
+                balls[i].Draw(spriteBatch);
+            }
+          
+
             spriteBatch.End();
             base.Draw(gameTime);
+
+
+           // spriteBatch.Draw(Image, position, null, Color.White,0f,Vector2.Zero, Vector2.One, SpriteEffects.None,0f)
         }
     }
 }

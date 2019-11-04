@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Intro
 {
-    class Sprite
+    public class Sprite
     {
 
         public Texture2D image;
@@ -32,7 +32,7 @@ namespace Intro
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(image,position,tint);
+            spriteBatch.Draw(image, hitbox, tint);
         }
         
 
